@@ -27,7 +27,7 @@ b = Bridge(bridge_ip)
 b.connect()
 
 
-@app.route('/status', methods=['get'])
+@app.route('/', methods=['get'])
 def get_status_and_respond():
     co2_status = b.get_light(int(19))["state"]["on"]
 
