@@ -1,7 +1,7 @@
-FROM python:alpine3.19
+FROM python:3-alpine
 
 ARG container_name
-ENV CONTAINER_NAME $container_name
+ENV CONTAINER_NAME=$container_name
 
 WORKDIR /$CONTAINER_NAME
 
@@ -14,5 +14,4 @@ RUN pip install -r requirements.txt
 
 COPY .python_hue /root/.python_hue
 
-#CMD python $SCRIPT_NAME
 CMD python $SCRIPT_NAME
