@@ -92,10 +92,12 @@ HTML_TEMPLATE = """
          <tr>
             <th>Bridge IP</th>
             <th>Switch Number</th>
+            <th>Server Port</th>
          </tr>
          <tr>
             <td>{{ bridge_ip }}</td>
             <td>{{ socket_number }}</td>
+            <td>{{ server_port }}</td>
          </tr>
       </table>
    </body>
@@ -152,7 +154,8 @@ def index():
                                   on_time=co2_config['on_time'],
                                   off_time=co2_config['off_time'],
                                   socket_number=co2,
-                                  bridge_ip=bridge_ip)
+                                  bridge_ip=bridge_ip,
+                                  server_port=server_port)
 
 
 @app.route('/set_status', methods=['POST'])
