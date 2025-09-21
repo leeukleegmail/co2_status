@@ -49,7 +49,7 @@ HTML_TEMPLATE = """
             <th>C02 Status</th>
          </tr>
          <tr>
-            <td>{{ co2_status }}</td>
+            <td align ="center">{{ co2_status }}</td>
          </tr>
       </table>
       <h2>Schedule</h2>
@@ -60,8 +60,8 @@ HTML_TEMPLATE = """
             <th>Off Time</th>
          </tr>
          <tr>
-            <td>{{ on_time }}</td>
-            <td>{{ off_time }}</td>
+            <td align ="center">{{ on_time }}</td>
+            <td align ="center">{{ off_time }}</td>
          </tr>
       </table>
       <h2></h2>
@@ -96,8 +96,8 @@ HTML_TEMPLATE = """
          </tr>
          <tr>
             <td>{{ bridge_ip }}</td>
-            <td>{{ socket_number }}</td>
-            <td>{{ server_port }}</td>
+            <td align ="center">{{ socket_number }}</td>
+            <td align ="center">{{ server_port }}</td>
          </tr>
       </table>
    </body>
