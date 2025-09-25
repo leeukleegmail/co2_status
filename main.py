@@ -41,6 +41,22 @@ HTML_TEMPLATE = """
 <html>
    <head>
       <title>C02 Schedule</title>
+      <style>
+        .button-container {
+            display: flex;
+            gap: 10px; /* space between buttons */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+        }
+    </style>
    </head>
    <body>
       <h2>Status</h2>
@@ -87,6 +103,16 @@ HTML_TEMPLATE = """
          <button type="submit">Update Time</button>
       </form>
       <p></p>
+      <h2>Manual Override</h2>
+     <div class="button-container">
+
+      <form action="/turn_on" method="post">
+        <button type="submit">Turn On</button>
+      </form>
+      <form action="/turn_off" method="post">
+        <button type="submit">Turn Off</button>
+      </form>
+      </div>
       <h2>Configuration</h2>
       <table border="1" cellpadding="5">
          <tr>
@@ -166,6 +192,22 @@ def set_status():
     co2_config["off_time"] = new_off_time
 
     update_schedule(new_on_time, new_off_time)
+    return redirect(url_for('index'))
+
+device_state = {'status': 'OFF'}
+
+
+@app.route('/turn_on', methods=['POST'])
+def turn_on():
+    device_state['status'] = 'ON'
+    print("on")
+    return redirect(url_for('index'))
+
+
+@app.route('/turn_off', methods=['POST'])
+def turn_off():
+    device_state['status'] = 'OFF'
+    print("off")
     return redirect(url_for('index'))
 
 
