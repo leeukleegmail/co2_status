@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 co2 = os.getenv('CO2_SOCKET', '19')
 bridge_ip = os.getenv('BRIDGE_IP', "192.168.178.158")
 server_port= os.getenv('SERVER_PORT', "5002")
-on_time = os.getenv('ON_TIME', '11:00')
+on_time = os.getenv('ON_TIME', '10:00')
 off_time = os.getenv('ON_TIME', '18:00')
 
 logging.info(f"CO2 socket       : {co2}")
@@ -200,14 +200,14 @@ device_state = {'status': 'OFF'}
 @app.route('/turn_on', methods=['POST'])
 def turn_on():
     device_state['status'] = 'ON'
-    print("on")
+    co2_on()
     return redirect(url_for('index'))
 
 
 @app.route('/turn_off', methods=['POST'])
 def turn_off():
     device_state['status'] = 'OFF'
-    print("off")
+    co2_off()
     return redirect(url_for('index'))
 
 
