@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+   <head>
+       <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css">
+       <title>C02 Schedule</title>
+   </head>
+   <body>
+      <h2>Status</h2>
+      <table border="1" cellpadding="5">
+         <tr>
+            <th>C02 Status</th>
+         </tr>
+         <tr>
+            <td align ="center">{{ co2_status }}</td>
+         </tr>
+      </table>
+      <h2>Schedule</h2>
+      <p></p>
+      <table border="1" cellpadding="5">
+         <tr>
+            <th>On Time</th>
+            <th>Off Time</th>
+         </tr>
+         <tr>
+            <td align ="center">{{ on_time }}</td>
+            <td align ="center">{{ off_time }}</td>
+         </tr>
+      </table>
+      <h2></h2>
+      <form method="POST" action="{{ url_for('set_schedule') }}">
+         <label for="on_time">Choose On Time:</label>
+         <select name="on_time" id="on_time">
+         {% for on_time_option in on_time_options %}
+         <option value="{{ on_time_option }}" {% if on_time_option == on_time %}selected{% endif %}>
+         {{ on_time_option }}
+         </option>
+         {% endfor %}
+         </select>
+         <p></p>
+         <label for="off_time">Choose Off Time:</label>
+         <select name="off_time" id="off_time">
+         {% for off_time_option in off_time_options %}
+         <option value="{{ off_time_option }}" {% if off_time_option == off_time %}selected{% endif %}>
+         {{ off_time_option }}
+         </option>
+         {% endfor %}
+         </select>
+         <p></p>
+         <button type="submit" class="button">Update Time</button>
+      </form>
+               {% with messages = get_flashed_messages() %}
+         {% if messages %}
+        <div id="flash-message" class="flash-message">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+      </div>
+      <p></p>
+      <h2>Manual Override</h2>
+     <div class="button-container">
+
+      <form action="/turn_on" method="post">
+        <button type="submit" class="button">Turn On</button>
+      </form>
+      <form action="/turn_off" method="post">
+        <button type="submit" class="button">Turn Off</button>
+      </form>
+      <h2>Configuration</h2>
+      <table border="1" cellpadding="5">
+         <tr>
+            <th>Bridge IP</th>
+            <th>Switch Number</th>
+            <th>Server Port</th>
+         </tr>
+         <tr>
+            <td>{{ bridge_ip }}</td>
+            <td align ="center">{{ socket_number }}</td>
+            <td align ="center">{{ server_port }}</td>
+         </tr>
+      </table>
+       <script>
+        // Automatically hide the flash message after 3 seconds
+        setTimeout(function() {
+            var flash = document.getElementById('flash-message');
+            if (flash) {
+                flash.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+   </body>
+</html>
