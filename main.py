@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, request, redirect, url_for, render_template_string
+from flask import Flask, request, redirect, url_for, render_template_string, render_template, flash
 from phue import Bridge
 
 logging.basicConfig(level=logging.INFO)
@@ -27,108 +27,14 @@ b.connect()
 scheduler = BackgroundScheduler()
 scheduler.start()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='templates/assets', static_url_path='/assets')
+app.secret_key = "4567889900"
 
-# In-memory store of task statuses
-co2_config = {'on_time': on_time, 'off_time': off_time}
+# In-memory store of schedule
+co2_schedule = {'on_time': on_time, 'off_time': off_time}
 
 on_time_options = ["9:00", "10:00", "11:00", "12:00"]
 off_time_options = ["18:00", "19:00", "20:00", "21:00"]
-
-# HTML Template
-HTML_TEMPLATE = """
-<!doctype html>
-<html>
-   <head>
-      <title>C02 Schedule</title>
-      <style>
-        .button-container {
-            display: flex;
-            gap: 10px; /* space between buttons */
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        h1 {
-            font-family: Arial, sans-serif;
-        }
-    </style>
-   </head>
-   <body>
-      <h2>Status</h2>
-      <table border="1" cellpadding="5">
-         <tr>
-            <th>C02 Status</th>
-         </tr>
-         <tr>
-            <td align ="center">{{ co2_status }}</td>
-         </tr>
-      </table>
-      <h2>Schedule</h2>
-      <p></p>
-      <table border="1" cellpadding="5">
-         <tr>
-            <th>On Time</th>
-            <th>Off Time</th>
-         </tr>
-         <tr>
-            <td align ="center">{{ on_time }}</td>
-            <td align ="center">{{ off_time }}</td>
-         </tr>
-      </table>
-      <h2></h2>
-      <form method="POST" action="{{ url_for('set_status') }}">
-         <label for="on_time">Choose On Time:</label>
-         <select name="on_time" id="on_time">
-         {% for on_time_option in on_time_options %}
-         <option value="{{ on_time_option }}" {% if on_time_option == on_time %}selected{% endif %}>
-         {{ on_time_option }}
-         </on_time_option>
-         {% endfor %}
-         </select>
-         <p></p>
-         <label for="off_time">Choose Off Time:</label>
-         <select name="off_time" id="off_time">
-         {% for off_time_option in off_time_options %}
-         <option value="{{ off_time_option }}" {% if off_time_option == off_time %}selected{% endif %}>
-         {{ off_time_option }}
-         </off_time_option>
-         {% endfor %}
-         </select>
-         <p></p>
-         <button type="submit">Update Time</button>
-      </form>
-      <p></p>
-      <h2>Manual Override</h2>
-     <div class="button-container">
-
-      <form action="/turn_on" method="post">
-        <button type="submit">Turn On</button>
-      </form>
-      <form action="/turn_off" method="post">
-        <button type="submit">Turn Off</button>
-      </form>
-      </div>
-      <h2>Configuration</h2>
-      <table border="1" cellpadding="5">
-         <tr>
-            <th>Bridge IP</th>
-            <th>Switch Number</th>
-            <th>Server Port</th>
-         </tr>
-         <tr>
-            <td>{{ bridge_ip }}</td>
-            <td align ="center">{{ socket_number }}</td>
-            <td align ="center">{{ server_port }}</td>
-         </tr>
-      </table>
-   </body>
-</html>
-"""
 
 
 def get_co2_status():
@@ -173,25 +79,27 @@ def update_schedule(schedule_on_time, schedule_off_time):
 @app.route('/', methods=['GET'])
 def index():
     co2_status = get_co2_status()
-    return render_template_string(HTML_TEMPLATE,
+    return render_template('index.html',
                                   on_time_options=on_time_options,
                                   off_time_options=off_time_options,
                                   co2_status=co2_status,
-                                  on_time=co2_config['on_time'],
-                                  off_time=co2_config['off_time'],
+                                  on_time=co2_schedule['on_time'],
+                                  off_time=co2_schedule['off_time'],
                                   socket_number=co2,
                                   bridge_ip=bridge_ip,
                                   server_port=server_port)
 
 
-@app.route('/set_status', methods=['POST'])
-def set_status():
+@app.route('/set_schedule', methods=['POST'])
+def set_schedule():
     new_on_time = request.form.get('on_time')
     new_off_time = request.form.get('off_time')
-    co2_config["on_time"] = new_on_time
-    co2_config["off_time"] = new_off_time
+    co2_schedule["on_time"] = new_on_time
+    co2_schedule["off_time"] = new_off_time
 
     update_schedule(new_on_time, new_off_time)
+    flash("Updated Successfully!!!")
+
     return redirect(url_for('index'))
 
 device_state = {'status': 'OFF'}
