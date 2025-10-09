@@ -1,33 +1,64 @@
+body {
+    background-color: #f2f2f2;
+    background-image: url('../images/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
-img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit: cover;
-  opacity:    0.5;
-  background: #000;
-  width:      100%;
-  height:     100%;
-  z-index:    10;
-  top:        0;
-  left:       0;
-  position:   fixed;
+h1 {
+  color:#ededed;
+}
+
+h2 {
+  color:#ededed;
 }
 
 .button {
-  background-color: #20BEFA; /* Green */
-  border: none;
-  border-radius: 15px 15px;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  width: 150px;
-  height 30px;
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	background-color:#ededed;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#3a8a9e;
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+
+table {
+  text-align:center;
+  color:#3a8a9e;
+  border-style: solid;
+  border-color: #ededed;
+}
+
+td, th{
+  text-shadow:0px 1px 0px #e1e2ed;
+  color:#3a8a9e;
+  border-style: solid;
+  border-color: #ededed;
+  background-color:#ededed;
+}
+
+.dropdown {
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	background-color:#ededed;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#3a8a9e;
+	font-family:Arial;
+	font-size:15px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
 }
 
 .flash-message {
@@ -56,6 +87,7 @@ label {
   width: 200px;
   line-height: 26px;
   margin-bottom: 10px;
+  color: #ededed;
 }
 
 input {
