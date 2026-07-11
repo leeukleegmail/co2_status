@@ -10,7 +10,7 @@ from phue import Bridge
 logging.basicConfig(level=logging.INFO)
 
 co2 = os.getenv('CO2_SOCKET', '19')
-bridge_ip = os.getenv('BRIDGE_IP', "192.168.178.158")
+bridge_ip = os.getenv('BRIDGE_IP', "192.168.68.103")
 server_port= os.getenv('SERVER_PORT', "5002")
 on_time = os.getenv('ON_TIME', '10:00')
 off_time = os.getenv('ON_TIME', '20:00')
@@ -120,4 +120,5 @@ def turn_off():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0',port=int(server_port))
+    app.run(debug=True, host='0.0.0.0', port=int(server_port))
+    update_schedule(on_time, off_time)
