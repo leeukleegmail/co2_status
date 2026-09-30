@@ -30,9 +30,6 @@ scheduler.start()
 app = Flask(__name__, static_folder='templates/assets', static_url_path='/assets')
 app.secret_key = "4567889900"
 
-# In-memory store of schedule
-co2_schedule = {'on_time': on_time, 'off_time': off_time}
-
 on_time_options = ["9:00", "10:00", "11:00", "12:00"]
 off_time_options = ["18:00", "19:00", "20:00", "21:00"]
 
@@ -78,6 +75,15 @@ def update_schedule(schedule_on_time, schedule_off_time):
     atexit.register(lambda: scheduler.shutdown())
 
 
+def get_scheduled_time(job_id, fallback):
+    job = scheduler.get_job(job_id)
+    if job is None or job.next_run_time is None:
+        return fallback
+
+    run_time = job.next_run_time
+    return f"{run_time.hour}:{run_time.minute:02d}"
+
+
 @app.route('/', methods=['GET'])
 def index():
     co2_status = get_co2_status()
@@ -85,8 +91,8 @@ def index():
                                   on_time_options=on_time_options,
                                   off_time_options=off_time_options,
                                   co2_status=co2_status,
-                                  on_time=co2_schedule['on_time'],
-                                  off_time=co2_schedule['off_time'],
+                                  on_time=get_scheduled_time('co2_on', on_time),
+                                  off_time=get_scheduled_time('co2_off', off_time),
                                   socket_number=co2,
                                   bridge_ip=bridge_ip,
                                   server_port=server_port)
@@ -96,9 +102,6 @@ def index():
 def set_schedule():
     new_on_time = request.form.get('on_time')
     new_off_time = request.form.get('off_time')
-    co2_schedule["on_time"] = new_on_time
-    co2_schedule["off_time"] = new_off_time
-
     update_schedule(new_on_time, new_off_time)
     flash("Updated Successfully!!!")
 
