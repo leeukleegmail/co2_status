@@ -13,7 +13,7 @@ co2 = os.getenv('CO2_SOCKET', '19')
 bridge_ip = os.getenv('BRIDGE_IP', "192.168.68.103")
 server_port= os.getenv('SERVER_PORT', "5002")
 on_time = os.getenv('ON_TIME', '10:00')
-off_time = os.getenv('ON_TIME', '20:00')
+off_time = os.getenv('OFF_TIME', '20:00')
 
 logging.info(f"CO2 socket       : {co2}")
 logging.info(f"Bridge IP        : {bridge_ip}")
@@ -38,7 +38,7 @@ off_time_options = ["18:00", "19:00", "20:00", "21:00"]
 
 
 def get_co2_status():
-    if b.get_light(int(19))["state"]["on"]:
+    if b.get_light(int(co2))["state"]["on"]:
         return "On"
     else:
         return "Off"
@@ -63,12 +63,14 @@ def update_schedule(schedule_on_time, schedule_off_time):
     scheduler.add_job(func=co2_on,
                       trigger='cron',
                       hour=int(schedule_on_time.split(':')[0]),
+                      minute=int(schedule_on_time.split(':')[1]),
                       id='co2_on',
                       name=f'turning on C02 at {schedule_on_time}',
                       replace_existing=True)
     scheduler.add_job(func=co2_off,
                       trigger='cron',
                       hour=int(schedule_off_time.split(':')[0]),
+                      minute=int(schedule_off_time.split(':')[1]),
                       id='co2_off',
                       name=f'turning off C02 at {schedule_off_time}',
                       replace_existing=True)
@@ -120,5 +122,5 @@ def turn_off():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=int(server_port))
     update_schedule(on_time, off_time)
+    app.run(debug=True, host='0.0.0.0', port=int(server_port))
