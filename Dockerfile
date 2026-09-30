@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt
 
 COPY .python_hue /root/.python_hue
 
-CMD python $SCRIPT_NAME
+CMD ["sh", "-c", "exec python \"$SCRIPT_NAME\""]
